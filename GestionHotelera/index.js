@@ -24,5 +24,3 @@ app.use("/usuarios");
 
 // Inicializar servidor
 app.listen(8080);
-
-//dsfognasiod
