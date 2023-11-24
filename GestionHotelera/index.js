@@ -8,20 +8,20 @@ const mongoose = require("mongoose");
 
 // Enrutadores
 const habitaciones = require(__dirname + "/routes/habitaciones");
-const limpieza = require (__dirname + "/routes/limpiezas");
-const usuarios = require (__dirname + "/routes/usuarios");
+const limpiezas = require (__dirname + "/routes/limpiezas");
+const auth = require (__dirname + "/routes/auth");
 
 // Conectar con 
-mongoose.connect("");
+mongoose.connect("mongodb://localhost:27017/hotel");
 
 // Inicializar express
 const app = express();
 
 // Cargar middleware para peticiones POST y PUT y enrutadores
 app.use(express.json());
-app.use("/habitaciones");
-app.use("/limpiezas");
-app.use("/usuarios");
+app.use("/habitaciones", habitaciones);
+app.use("/limpiezas", limpiezas);
+app.use("/auth", auth);
 
 // Inicializar servidor
 app.listen(8080);
