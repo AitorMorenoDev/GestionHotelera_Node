@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 const express = require("express");
 
 let habitacion = require = (__dirname + "../models/limpieza.js");
@@ -12,8 +10,7 @@ routerLimp.get("/:id", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: resultado });
         } else {
-            res.status(500)
-                .send({ ok: false, error: "No hay limpiezas registradas para esa habitación" });
+            throw new Error();
         }
     }).catch(error => {
         res.status(500)
@@ -32,8 +29,7 @@ routerLimp.get("/:id/estado", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: estado });
         } else {
-            res.status(400)
-                .send({ ok: false, error: "Error obteniendo estado de limpieza" });
+            throw new Error();
         }
     }).catch(error => {
         res.status(400)

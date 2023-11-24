@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
 const express = require("express");
 
 let habitacion = require = (__dirname + "../models/habitacion.js");
@@ -23,8 +21,7 @@ routerHabs.get("/:id", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: resultado });
         } else {
-            res.status(400)
-                .send({ ok: false, error: "No existe el número de habitación" });
+            throw new Error(); //Lanza el error para evitar repetir el mensaje en el código
         }
     }).catch (error => {
         res.status(400)
@@ -64,8 +61,7 @@ routerHabs.put("/:id", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: resultado });
         } else {
-            res.status(400)
-                .send({ ok: false, error: "Error actualizando los datos de la habitación" });
+            throw new Error();
         }
     }).catch(error => {
         res.status(400)
@@ -80,8 +76,7 @@ routerHabs.delete("/:id", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: resultado });
         } else {
-            res.status(400)
-                .send({ ok: false, error: "Error eliminando la habitación" });
+            throw new Error();
         }
     }).catch(error => {
         res.status(400)
@@ -123,8 +118,7 @@ routerHabs.put("/:idHab/incidencias/:idInc", (req, res) => {
                 res.status(200)
                     .send({ ok: true, resultado: resultado });
             } else {
-                res.status(400)
-                    .send({ ok: false, error: "Incidencia no encontrada" });
+                throw new Error();
             }
         }).catch(error => {
             res.status(400)
@@ -143,8 +137,7 @@ routerHabs.put("/:id/ultima", (req, res) => {
                 res.status(200)
                     .send({ ok: true, resultado: resultado });
             } else {
-                res.status(400)
-                    .send({ ok: false, error: "Error actualizando limpieza" });
+                throw new Error();
             }
         }).catch(error => {
             res.status(400)

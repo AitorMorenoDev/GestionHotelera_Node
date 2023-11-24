@@ -1,5 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
+/* Aitor Moreno Iborra
+Despliegue de aplicaciones web: Práctica 1
+2º DAM/DAW */
 
 // Carga de librerías
 const express = require("express");

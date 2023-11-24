@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const mongoose = require("mongoose");
 
 let habitacionSchema = new mongoose.Schema ({
@@ -47,4 +46,3 @@ let incidenciasSchema = new mongoose.Schema ({
 
 let Habitacion = mongoose.model("habitacion", habitacionSchema);
 module.exports = Habitacion;
-

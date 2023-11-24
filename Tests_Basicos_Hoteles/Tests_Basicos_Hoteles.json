@@ -1,0 +1,256 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Tests Hotel Basicos",
+    "dateExported": "2023-11-15T10:39:08.689Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "a128919d-aeb8-4af7-b789-0b3edf866c1c",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Listar Habitaciones",
+            "url": "/habitaciones",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-11-06T10:41:51.397Z",
+            "modified": "2023-11-06T11:16:56.902Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "res-body",
+                    "custom": "",
+                    "action": "contains",
+                    "value": "["
+                }
+            ]
+        },
+        {
+            "_id": "93cd7069-b2e5-4af5-a1da-04a2c65afb4c",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Ficha Habitación Incorrecta",
+            "url": "/habitaciones/000000000000000000000000",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-06T10:49:27.629Z",
+            "modified": "2023-11-06T11:17:01.058Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "400"
+                }
+            ]
+        },
+        {
+            "_id": "24b2ad38-be9c-4fac-92c8-8d2248b4d9dc",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Insertar Habitacion Sin Permisos",
+            "url": "/habitaciones",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-11-07T12:20:03.832Z",
+            "modified": "2023-11-07T12:20:52.391Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"numero\": 20, \"tipo\": \"individual\", \"descripcion\": \"Habitación No Permitida\", \"precio\": 75}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "403"
+                }
+            ]
+        },
+        {
+            "_id": "7875df7f-86ef-43ae-ac7f-6327b28a35b7",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Login Incorrecto",
+            "url": "/auth/login",
+            "method": "POST",
+            "sortNum": 37500,
+            "created": "2023-11-07T12:25:48.280Z",
+            "modified": "2023-11-15T09:30:41.210Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"login\": \"u1\", \"password\": \"p1\"}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "401"
+                }
+            ]
+        },
+        {
+            "_id": "a77d740e-d099-4537-88b1-8022466e6ed4",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Login Correcto",
+            "url": "/auth/login",
+            "method": "POST",
+            "sortNum": 38750,
+            "created": "2023-11-07T12:22:19.823Z",
+            "modified": "2023-11-15T09:30:46.199Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"login\": \"usuario1\", \"password\": \"password1\"}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "set-env-var",
+                    "custom": "json.resultado",
+                    "action": "setto",
+                    "value": "{{token}}"
+                }
+            ]
+        },
+        {
+            "_id": "69363fcc-4ad9-4782-a9ad-d28794b67df0",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Insertar Habitación",
+            "url": "/habitaciones",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-11-06T11:15:54.209Z",
+            "modified": "2023-11-07T12:28:27.587Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"numero\": 10, \"tipo\": \"individual\", \"descripcion\": \"Habitación Thunder Client\", \"precio\": 100}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.resultado._id",
+                    "action": "setto",
+                    "value": "{{idHabitacion}}"
+                },
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "res-body",
+                    "custom": "",
+                    "action": "contains",
+                    "value": "\"numero\": 10"
+                }
+            ]
+        },
+        {
+            "_id": "bb270887-f714-4974-af21-f5561e83e7e3",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Actualizar Habitacion",
+            "url": "/habitaciones/{{idHabitacion}}",
+            "method": "PUT",
+            "sortNum": 45000,
+            "created": "2023-11-06T12:01:36.590Z",
+            "modified": "2023-11-07T12:28:40.555Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"numero\": 10, \"tipo\": \"individual\", \"descripcion\": \"Habitación Thunder Client\", \"precio\": 200}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "res-body",
+                    "custom": "",
+                    "action": "contains",
+                    "value": "\"precio\": 200"
+                }
+            ]
+        },
+        {
+            "_id": "451d4d66-f622-4f0e-9258-6c6a3a0a2673",
+            "colId": "0fb94b84-50b1-45af-9af2-231c882d5df9",
+            "containerId": "",
+            "name": "Borrar Habitacion",
+            "url": "/habitaciones/{{idHabitacion}}",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-11-06T11:59:09.334Z",
+            "modified": "2023-11-07T12:28:55.853Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "res-body",
+                    "custom": "",
+                    "action": "contains",
+                    "value": "\"_id\": \"{{idHabitacion}}\""
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "options": {
+            "baseUrl": "localhost:8080"
+        },
+        "envId": "a24d1c87-fd22-4339-a5f8-fd3522ed5d14"
+    }
+}

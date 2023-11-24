@@ -1,0 +1,16 @@
+{
+    "client": "Thunder Client",
+    "environmentName": "hotel",
+    "dateExported": "2023-11-15T10:38:51.258Z",
+    "version": "1.0",
+    "variables": [
+        {
+            "name": "token",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InVzdWFyaW8xIiwiaWF0IjoxNzAwMDQyNTg5LCJleHAiOjE3MDAwNDk3ODl9.5jvY7YEB1c4JmXHj0JmGBTQyqKtSqPpjIAVpegXagNE"
+        },
+        {
+            "name": "idHabitacion",
+            "value": "654a2d97090f714c7052ae79"
+        }
+    ]
+}

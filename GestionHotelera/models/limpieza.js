@@ -8,7 +8,7 @@ let limpiezaSchema = new mongoose.Schema({
     fecha: {
         type: Date,
         required: true,
-        default: new Date(Date.now()).toLocaleDateString();
+        default: new Date(Date.now()).toLocaleDateString()
     },
     observaciones: {
         type: String
