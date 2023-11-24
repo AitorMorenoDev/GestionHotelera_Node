@@ -1,6 +1,7 @@
 const express = require("express");
 
-let habitacion = require = (__dirname + "../models/habitacion.js");
+let habitacion = require(__dirname + "/../models/habitacion.js");
+let auth = require(__dirname + "/../auth/auth.js");
 let routerHabs = express.Router();
 
 // Obtener un listado de todas las habitaciones:
@@ -30,9 +31,8 @@ routerHabs.get("/:id", (req, res) => {
 });
 
 // Insertar una habitación
-routerHabs.post("/", (req, res) => {
-    
-    let habitacion = new Habitacion({
+routerHabs.post("/", auth.protegerRuta, (req, res) => {
+    let habitacion = new habitacion({
         numero: req.body.numero,
         tipo: req.body.tipo,
         descripcion: req.body.descripcion,
@@ -49,7 +49,7 @@ routerHabs.post("/", (req, res) => {
 });
 
 // Actualizar los datos de una habitación
-routerHabs.put("/:id", (req, res) => {
+routerHabs.put("/:id", auth.protegerRuta, (req, res) => {
     habitacion.findByIdAndUpdate(req.params.id, {
         numero: req.body.numero,
         tipo: req.body.tipo,
@@ -70,7 +70,7 @@ routerHabs.put("/:id", (req, res) => {
 });
 
 // Eliminar una habitación
-routerHabs.delete("/:id", (req, res) => {
+routerHabs.delete("/:id", auth.protegerRuta, (req, res) => {
     habitacion.findByIdAndRemove(req.params.id).then(resultado => {
         if(resultado) {
             res.status(200)
@@ -85,7 +85,7 @@ routerHabs.delete("/:id", (req, res) => {
 });
 
 // Añadir una incidencia en una habitación
-routerHabs.post("/:id/incidencias", (req, res) => {
+routerHabs.post("/:id/incidencias", auth.protegerRuta, (req, res) => {
 
     habitacion.findByIdAndUpdate(req.params.id, {
         $push: {
@@ -106,7 +106,7 @@ routerHabs.post("/:id/incidencias", (req, res) => {
 });
 
 // Actualizar el estado de una incidencia de una habitación:
-routerHabs.put("/:idHab/incidencias/:idInc", (req, res) => {
+routerHabs.put("/:idHab/incidencias/:idInc", auth.protegerRuta, (req, res) => {
 
     habitacion.findByIdAndUpdate({ _id: req.params.idHab, "incidencias._id": req.params.idInc }, {
         $set: {
@@ -128,7 +128,7 @@ routerHabs.put("/:idHab/incidencias/:idInc", (req, res) => {
 
 
 // Actualizar última limpieza
-routerHabs.put("/:id/ultima", (req, res) => {
+routerHabs.put("/:id/ultima", auth.protegerRuta, (req, res) => {
     const fechaActual = new Date(Date.now());
 
     habitacion.findByIdAndUpdate(req.params.id, { ultimaLimpieza: fechaActual.toLocaleDateString()}, {new: true})

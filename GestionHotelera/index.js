@@ -8,8 +8,8 @@ const mongoose = require("mongoose");
 
 // Enrutadores
 const habitaciones = require(__dirname + "/routes/habitaciones");
-const limpiezas = require (__dirname + "/routes/limpiezas");
-const auth = require (__dirname + "/routes/auth");
+const limpiezas = require(__dirname + "/routes/limpiezas");
+const auth = require(__dirname + "/routes/auth");
 
 // Conectar con 
 mongoose.connect("mongodb://localhost:27017/hotel");

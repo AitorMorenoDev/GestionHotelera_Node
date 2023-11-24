@@ -1,6 +1,6 @@
 const express = require("express");
 
-let habitacion = require = (__dirname + "../models/limpieza.js");
+let habitacion = require(__dirname + "/../models/limpieza.js");
 let routerLimp = express.Router();
 
 // Obtener limpiezas de una habitación
@@ -38,7 +38,7 @@ routerLimp.get("/:id/estado", (req, res) => {
 });
 
 // Actualizar limpieza
-routerLimp.post("/:id", (req, res) => {
+routerLimp.post("/:id", auth.protegerRuta, (req, res) => {
     let limpieza = new Limpieza({
         habitacion: req.params.id,
         fecha: new Date(Date.now()).toLocaleDateString(),
