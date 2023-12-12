@@ -39,7 +39,7 @@ routerLimp.get("/:id/estado", (req, res) => {
 
 // Actualizar limpieza
 routerLimp.post("/:id", auth.protegerRuta, (req, res) => {
-    let limpieza = new Limpieza({
+    let limpieza = new limpieza({
         habitacion: req.params.id,
         fecha: new Date(Date.now()).toLocaleDateString(),
         observaciones: req.body.observaciones
