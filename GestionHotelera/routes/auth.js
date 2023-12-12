@@ -6,7 +6,7 @@ let router = express.Router();
 router.post("/auth/login", (req, res) => {
     let usuario = req.body.usuario;
     let password = req.body.password;
-    let existeUsuario = usuarios.filter(u =>
+    let existeUsuario = usuario.filter(u =>
         u.usuario == usuario && u.password == password);
 
     if (existeUsuario.length == 1)
