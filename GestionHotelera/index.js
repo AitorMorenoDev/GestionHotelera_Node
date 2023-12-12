@@ -6,13 +6,17 @@ Despliegue de aplicaciones web: Práctica 1
 const express = require("express");
 const mongoose = require("mongoose");
 
+// Carga de variables de entorno
+puerto = process.env.puerto;
+db = process.env.db;
+
 // Enrutadores
 const habitaciones = require(__dirname + "/routes/habitaciones");
 const limpiezas = require(__dirname + "/routes/limpiezas");
 const auth = require(__dirname + "/routes/auth");
 
-// Conectar con 
-mongoose.connect("mongodb://localhost:27017/hotel");
+// Conectar con la base de datos
+mongoose.connect(bd);
 
 // Inicializar express
 const app = express();
@@ -24,4 +28,4 @@ app.use("/limpiezas", limpiezas);
 app.use("/auth", auth);
 
 // Inicializar servidor
-app.listen(8080);
+app.listen(puerto);
