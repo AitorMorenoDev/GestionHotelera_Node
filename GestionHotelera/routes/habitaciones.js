@@ -3,6 +3,7 @@ const express = require("express");
 let habitacion = require(__dirname + "/../models/habitacion.js");
 const auth = require(__dirname + "/../auth/auth.js");
 let routerHabs = express.Router();
+let limpieza = require(__dirname + "/../models/limpieza.js");
 
 // Obtener un listado de todas las habitaciones:
 routerHabs.get("/", (req, res) => {
@@ -138,12 +139,12 @@ routerHabs.put("/:idHab/incidencias/:idInc", auth.protegerRuta, (req, res) => {
 // Actualizar última limpieza
 routerHabs.put("/:id/ultima", auth.protegerRuta, (req, res) => {
     // Obtener la fecha de la última limpieza realizada para esa habitación
-    Limpieza.findOne({ habitacion: req.params.id })
+    limpieza.findOne({ habitacion: req.params.id })
         .sort({ fecha: -1 })
         .then(ultimaLimpieza => {
             if (ultimaLimpieza) {
                 // Actualizar el campo ultimaLimpieza de la habitación con la fecha de la última limpieza
-                habitacion.findByIdAndUpdate(req.params.id, { ultimaLimpieza: ultimaLimpieza.fecha }, { new: true })
+                habitacion.findOneAndUpdate({_id: req.params.id} , { ultimaLimpieza: ultimaLimpieza.fecha }, { new: true })
                     .then(resultado => {
                         res.status(200).send({ ok: true, resultado: resultado });
                     })
@@ -155,7 +156,7 @@ routerHabs.put("/:id/ultima", auth.protegerRuta, (req, res) => {
             }
         })
         .catch(error => {
-            res.status(400).send({ ok: false, error: "Error obteniendo la última limpieza" });
+            res.status(400).send({ ok: false, error: "Error actualizando limpieza" });
         });
 });
 
