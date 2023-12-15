@@ -1,14 +1,18 @@
 const express = require("express");
 
 let habitacion = require(__dirname + "/../models/habitacion.js");
-let auth = require(__dirname + "/../auth/auth.js");
+const auth = require(__dirname + "/../auth/auth.js");
 let routerHabs = express.Router();
 
 // Obtener un listado de todas las habitaciones:
 routerHabs.get("/", (req, res) => {
     habitacion.find().then(resultado => {
-        res.status(200)
-            .send({ ok: true, resultado: resultado });
+        if(resultado.length > 0) {
+            res.status(200)
+                .send({ ok: true, resultado: resultado });
+        } else {
+            throw new Error(); //Lanza el error para evitar repetir el mensaje en el código
+        }
     }).catch (error => {
         res.status(500)
             .send({ ok: false, error: "No hay habitaciones registradas en la aplicación" });
@@ -22,7 +26,7 @@ routerHabs.get("/:id", (req, res) => {
             res.status(200)
                 .send({ ok: true, resultado: resultado });
         } else {
-            throw new Error(); //Lanza el error para evitar repetir el mensaje en el código
+            throw new Error();
         }
     }).catch (error => {
         res.status(400)
@@ -32,14 +36,14 @@ routerHabs.get("/:id", (req, res) => {
 
 // Insertar una habitación
 routerHabs.post("/", auth.protegerRuta, (req, res) => {
-    let habitacion = new habitacion({
+    const nuevaHabitacion = new habitacion({
         numero: req.body.numero,
         tipo: req.body.tipo,
         descripcion: req.body.descripcion,
         ultimaLimpieza: req.body.ultimaLimpieza,
         precio: req.body.precio
     });
-    habitacion.save().then(resultado => {
+    nuevaHabitacion.save().then(resultado => {
         res.status(200)
             .send({ ok: true, resultado: resultado });
     }).catch(error => {
@@ -48,8 +52,8 @@ routerHabs.post("/", auth.protegerRuta, (req, res) => {
     });
 });
 
-// Actualizar los datos de una habitación
 routerHabs.put("/:id", auth.protegerRuta, (req, res) => {
+    
     habitacion.findByIdAndUpdate(req.params.id, {
         numero: req.body.numero,
         tipo: req.body.tipo,
@@ -57,16 +61,21 @@ routerHabs.put("/:id", auth.protegerRuta, (req, res) => {
         ultimaLimpieza: req.body.ultimaLimpieza,
         precio: req.body.precio
     }).then(resultado => {
-        if(resultado) {
-            res.status(200)
-                .send({ ok: true, resultado: resultado });
-        } else {
+        if(req.body.numero > 50) {
             throw new Error();
+        } else {
+            if(resultado) {
+                res.status(200)
+                    .send({ ok: true, resultado: resultado });
+            } else {
+                throw new Error();
+            }
         }
     }).catch(error => {
         res.status(400)
             .send({ ok: false, error: "Error actualizando los datos de la habitación" });
     });
+    
 });
 
 // Eliminar una habitación
@@ -91,7 +100,7 @@ routerHabs.post("/:id/incidencias", auth.protegerRuta, (req, res) => {
         $push: {
             incidencias: {
                 descripcion: req.body.descripcion,
-                inicio: new Date(Date.now()).toLocaleDateString(),
+                inicio: new Date(Date.now()),
                 fin: "" 
             }
         }
@@ -108,9 +117,9 @@ routerHabs.post("/:id/incidencias", auth.protegerRuta, (req, res) => {
 // Actualizar el estado de una incidencia de una habitación:
 routerHabs.put("/:idHab/incidencias/:idInc", auth.protegerRuta, (req, res) => {
 
-    habitacion.findByIdAndUpdate({ _id: req.params.idHab, "incidencias._id": req.params.idInc }, {
+    habitacion.findOneAndUpdate({ _id: req.params.idHab, "incidencias._id": req.params.idInc }, {
         $set: {
-            "incidencias.$.fin": new Date(Date.now()).toLocaleDateString()
+            "incidencias.$.fin": new Date(),
         }
     }, { new: true })
         .then(resultado => {
@@ -126,22 +135,27 @@ routerHabs.put("/:idHab/incidencias/:idInc", auth.protegerRuta, (req, res) => {
         });
 });
 
-
 // Actualizar última limpieza
 routerHabs.put("/:id/ultima", auth.protegerRuta, (req, res) => {
-    const fechaActual = new Date(Date.now());
-
-    habitacion.findByIdAndUpdate(req.params.id, { ultimaLimpieza: fechaActual.toLocaleDateString()}, {new: true})
-        .then(resultado => {
-            if(resultado) {
-                res.status(200)
-                    .send({ ok: true, resultado: resultado });
+    // Obtener la fecha de la última limpieza realizada para esa habitación
+    Limpieza.findOne({ habitacion: req.params.id })
+        .sort({ fecha: -1 })
+        .then(ultimaLimpieza => {
+            if (ultimaLimpieza) {
+                // Actualizar el campo ultimaLimpieza de la habitación con la fecha de la última limpieza
+                habitacion.findByIdAndUpdate(req.params.id, { ultimaLimpieza: ultimaLimpieza.fecha }, { new: true })
+                    .then(resultado => {
+                        res.status(200).send({ ok: true, resultado: resultado });
+                    })
+                    .catch(error => {
+                        res.status(400).send({ ok: false, error: "Error actualizando limpieza" });
+                    });
             } else {
-                throw new Error();
+                res.status(400).send({ ok: false, error: "No se encontró ninguna limpieza para la habitación" });
             }
-        }).catch(error => {
-            res.status(400)
-                .send({ ok: false, error: "Error actualizando limpieza" });
+        })
+        .catch(error => {
+            res.status(400).send({ ok: false, error: "Error obteniendo la última limpieza" });
         });
 });
 

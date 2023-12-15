@@ -1,6 +1,21 @@
 const mongoose = require("mongoose");
 
-let habitacionSchema = new mongoose.Schema ({
+let incidenciasSchema = new mongoose.Schema ({
+    descripcion: {
+        type: String,
+        required: true
+    },
+    inicio: {
+        type: Date,
+        default: Date.now,
+        required: true
+    },
+    fin: {
+        type: Date,
+    }
+});
+
+let habitacionesSchema = new mongoose.Schema ({
     numero: {
         type: Number,
         required: true,
@@ -9,7 +24,7 @@ let habitacionSchema = new mongoose.Schema ({
     },
     tipo: {
         type: String,
-        enum: ["individual", "double", "familiar", "suite"],
+        enum: ["individual", "doble", "familiar", "suite"],
     },
     descripcion: {
         type: String,
@@ -29,20 +44,5 @@ let habitacionSchema = new mongoose.Schema ({
     incidencias: [incidenciasSchema]
 });
 
-let incidenciasSchema = new mongoose.Schema ({
-    descripcion: {
-        type: String,
-        required: true
-    },
-    inicio: {
-        type: Date,
-        default: Date.now,
-        required: true
-    },
-    fin: {
-        type: Date,
-    }
-});
-
-let Habitacion = mongoose.model("habitacion", habitacionSchema);
+let Habitacion = mongoose.model("habitacion", habitacionesSchema);
 module.exports = Habitacion;

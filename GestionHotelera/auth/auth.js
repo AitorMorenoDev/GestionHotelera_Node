@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
-const secreto = process.env.secreto;
+const dotenv = require("dotenv");
+dotenv.config();
+
+const secreto = process.env.SECRETO;
 
 let generarToken = (login) => jwt.sign({login: login}, secreto, {expiresIn: "2 hours"});
 
@@ -20,10 +23,10 @@ let protegerRuta = (req, res, next) => {
         if (resultado) {
             next();
         } else {
-            res.status(403).send({ ok: false, error: "Acceso no autorizado" });
+            res.status(403).send({ ok: false, error: "Acceso no autorizado." });
         }
     } else {
-        res.status(403).send({ ok: false, error: "Acceso no autorizado" });
+        res.status(403).send({ ok: false, error: "Acceso no autorizado." });
     }
 };
 

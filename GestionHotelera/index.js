@@ -5,10 +5,12 @@ Despliegue de aplicaciones web: Práctica 1
 // Carga de librerías
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Carga de variables de entorno
-puerto = process.env.puerto;
-db = process.env.db;
+const puerto = process.env.PUERTO;
+const database = process.env.DATABASE;
 
 // Enrutadores
 const habitaciones = require(__dirname + "/routes/habitaciones");
@@ -16,7 +18,7 @@ const limpiezas = require(__dirname + "/routes/limpiezas");
 const auth = require(__dirname + "/routes/auth");
 
 // Conectar con la base de datos
-mongoose.connect(bd);
+mongoose.connect(database);
 
 // Inicializar express
 const app = express();

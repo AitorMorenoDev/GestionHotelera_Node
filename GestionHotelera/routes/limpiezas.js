@@ -1,7 +1,9 @@
 const express = require("express");
 
-let habitacion = require(__dirname + "/../models/limpieza.js");
+let limpieza = require(__dirname + "/../models/limpieza.js");
+let habitacion = require(__dirname + "/../models/habitacion.js");
 let routerLimp = express.Router();
+let auth = require(__dirname + "/../auth/auth.js");
 
 // Obtener limpiezas de una habitación
 routerLimp.get("/:id", (req, res) => {
@@ -20,31 +22,38 @@ routerLimp.get("/:id", (req, res) => {
 
 // OBtener el estado de limpieza de una habitación:
 routerLimp.get("/:id/estado", (req, res) => {
-    habitacion.findById(req.params.id).then(resultado => {
-        if(resultado) {
-            let estado = "Pendiente de limpieza";
-            if(resultado.ultimaLimpieza.toDateString() === new Date().toDateString()) {
-                estado = "Limpia";
+    // Buscar la limpieza más reciente para la habitación
+    limpieza.findOne({ habitacion: req.params.id })
+        .sort({ fecha: -1 })
+        .then(ultimaLimpieza => {
+            if (ultimaLimpieza) {
+                let estado = "Pendiente de limpieza";
+                // Comparar la fecha de la última limpieza con la fecha actual
+                if (ultimaLimpieza.fecha.toDateString() === new Date().toDateString()) {
+                    estado = "Limpia";
+                }
+                res.status(200)
+                    .send({ ok: true, resultado: estado });
+            } else {
+                // No se encontraron limpiezas para la habitación
+                res.status(200)
+                    .send({ ok: true, resultado: "Pendiente de limpieza" });
             }
-            res.status(200)
-                .send({ ok: true, resultado: estado });
-        } else {
-            throw new Error();
-        }
-    }).catch(error => {
-        res.status(400)
-            .send({ ok: false, error: "Error obteniendo estado de limpieza" });
-    });
+        })
+        .catch(error => {
+            res.status(400)
+                .send({ ok: false, error: "Error obteniendo estado de limpieza" });
+        });
 });
 
 // Actualizar limpieza
 routerLimp.post("/:id", auth.protegerRuta, (req, res) => {
-    let limpieza = new limpieza({
+    let nuevalimpieza = new limpieza({
         habitacion: req.params.id,
-        fecha: new Date(Date.now()).toLocaleDateString(),
+        fecha: Date.now(),
         observaciones: req.body.observaciones
     });
-    limpieza.save().then(resultado => {
+    nuevalimpieza.save().then(resultado => {
         res.status(200)
             .send({ ok: true, resultado: resultado });
     }).catch(error => {
